@@ -24,9 +24,9 @@ public class PersonService {
 
     public DetailPersonData created(DetailPersonData data){
         Person person = new Person(data);
-        var personData = repository.save(person);
-        person.add(linkTo(methodOn(PersonController.class).search(personData.getId())).withSelfRel());
-        return new DetailPersonData(personData);
+        var enity = repository.save(person);
+        person.add(linkTo(methodOn(PersonController.class).search(enity.getId())).withSelfRel());
+        return new DetailPersonData(enity);
     }
 
     public DetailPersonData searchPerson(Long id) {
