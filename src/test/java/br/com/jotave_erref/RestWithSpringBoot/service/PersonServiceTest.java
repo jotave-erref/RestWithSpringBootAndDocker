@@ -3,9 +3,12 @@ package br.com.jotave_erref.RestWithSpringBoot.service;
 import br.com.jotave_erref.RestWithSpringBoot.Controller.PersonController;
 import br.com.jotave_erref.RestWithSpringBoot.domain.Person;
 import br.com.jotave_erref.RestWithSpringBoot.domain.dto.DetailPersonData;
+import br.com.jotave_erref.RestWithSpringBoot.domain.dto.PersonData;
 import br.com.jotave_erref.RestWithSpringBoot.domain.dto.UpdatePersonData;
+import br.com.jotave_erref.RestWithSpringBoot.infra.exception.RequiredObjectIsNullException;
 import br.com.jotave_erref.RestWithSpringBoot.repository.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,6 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -55,7 +60,6 @@ class PersonServiceTest {
         assertNotNull(result.gender());
         assertNotNull(result.link());
         assertTrue(result.link().contains(link));
-        System.out.println(result.toString());
         assertTrue(result.toString().contains("link=</person/1>;rel=\"self\""));
     }
 
@@ -81,6 +85,19 @@ class PersonServiceTest {
 
         assertTrue(result.toString().contains("link=</person/1>;rel=\"self\""));
 
+    }
+
+    @Test
+    @DisplayName("Should throw RequiredObjectIsNullException message if the object is null")
+    void testCreatedIsNull(){
+        Exception exception = assertThrows(RequiredObjectIsNullException.class, () ->{
+            service.created(null);
+        });
+
+        String expected = "It's not allowed to persist a null object";
+        String actual = exception.getMessage();
+
+        assertTrue(actual.contains(expected));
     }
     @Test
     void testUpdatePerson(){
@@ -113,6 +130,62 @@ class PersonServiceTest {
         assertEquals(result.gender(), person.getGender());
 
         assertTrue(result.toString().contains("link=</person/1>;rel=\"self\""));
+
+    }
+
+    @Test
+    @DisplayName("Should throw RequiredObjectIsNullException message if the object is null")
+    void testUpdateObjectIsNull(){
+        Exception exception = assertThrows(RequiredObjectIsNullException.class, () ->{
+            service.updatePerson(null);
+        });
+
+        String expected = "It's not allowed to persist a null object";
+        String actual = exception.getMessage();
+
+        assertTrue(actual.contains(expected));
+    }
+    @Test
+    void testFindAllPerson(){
+
+        List<Person> persons = new ArrayList<>();
+        persons.add(new Person("person1", "person1", "Rua xxx", "male"));
+        persons.add(new Person("person2", "person2", "Rua yyy", "female"));
+        persons.get(0).setId(1);
+        persons.get(1).setId(2);
+
+        persons.stream().map(p -> new PersonData(p.getId(), p.getFirstName(), p.getLastName(), p.getAddress(), p.getGender(), p.getLinks())).toList();
+
+        when(repository.findAll()).thenReturn(persons);
+
+        var result = service.findAllPerson();
+
+        assertNotNull(result);
+
+        var person1 = result.get(0);
+
+        assertNotNull(person1);
+        assertNotNull(person1.id());
+        assertNotNull(person1.link());
+
+        assertTrue(person1.toString().contains("link=</person/1>;rel=\"self\""));
+        assertEquals("person1", person1.firstName());
+        assertEquals("person1", person1.lastName());
+        assertEquals("Rua xxx", person1.address());
+        assertEquals("male", person1.gender());
+
+        var person2 = result.get(1);
+
+
+        assertNotNull(person2);
+        assertNotNull(person2.id());
+        assertNotNull(person2.link());
+
+        assertTrue(person2.toString().contains("link=</person/2>;rel=\"self\""));
+        assertEquals("person2", person2.firstName());
+        assertEquals("person2", person2.lastName());
+        assertEquals("Rua yyy", person2.address());
+        assertEquals("female", person2.gender());
 
     }
 
