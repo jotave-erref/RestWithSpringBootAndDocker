@@ -1,10 +1,10 @@
 package br.com.jotave_erref.RestWithSpringBoot.service;
 
 import br.com.jotave_erref.RestWithSpringBoot.Controller.PersonController;
-import br.com.jotave_erref.RestWithSpringBoot.domain.Person;
-import br.com.jotave_erref.RestWithSpringBoot.domain.dto.DetailPersonData;
-import br.com.jotave_erref.RestWithSpringBoot.domain.dto.PersonData;
-import br.com.jotave_erref.RestWithSpringBoot.domain.dto.UpdatePersonData;
+import br.com.jotave_erref.RestWithSpringBoot.domain.person.Person;
+import br.com.jotave_erref.RestWithSpringBoot.domain.person.DetailPersonData;
+import br.com.jotave_erref.RestWithSpringBoot.domain.person.PersonData;
+import br.com.jotave_erref.RestWithSpringBoot.domain.person.UpdatePersonData;
 import br.com.jotave_erref.RestWithSpringBoot.infra.exception.RequiredObjectIsNullException;
 import br.com.jotave_erref.RestWithSpringBoot.repository.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +40,8 @@ class PersonServiceTest {
     void setUp() {
         this.person = new Person("Jean", "Victor", "Rua xxx", "male");
         person.setId(1L);
+
+
     }
 
     @Test
@@ -60,7 +62,7 @@ class PersonServiceTest {
         assertNotNull(result.gender());
         assertNotNull(result.link());
         assertTrue(result.link().contains(link));
-        assertTrue(result.toString().contains("link=</person/1>;rel=\"self\""));
+        assertTrue(result.toString().contains("link=</api/person/1>;rel=\"self\""));
     }
 
     @Test
@@ -69,7 +71,7 @@ class PersonServiceTest {
         Person entity = new Person(personData);
         entity.setId(1L);
 
-        person.add(Link.of("/person/" + person.getId()));
+        person.add(Link.of("/api/person/" + person.getId()));
 
         when(repository.save(entity)).thenReturn(person);
 
@@ -83,7 +85,7 @@ class PersonServiceTest {
         assertEquals("Victor", result.lastName());
         assertEquals("Rua xxx", result.address());
 
-        assertTrue(result.toString().contains("link=</person/1>;rel=\"self\""));
+        assertTrue(result.toString().contains("link=</api/person/1>;rel=\"self\""));
 
     }
 
@@ -115,7 +117,7 @@ class PersonServiceTest {
         verify(repository).getReferenceById(updatePersonData.id());
         verify(repository).save(person);
 
-        person.add(Link.of("/person/" + person.getId()));
+        person.add(Link.of("api/person/" + person.getId()));
 
         //Verify that the person details were updated
         assertEquals("Rua yyy", person.getAddress());
@@ -129,7 +131,7 @@ class PersonServiceTest {
         assertEquals(result.address(), person.getAddress());
         assertEquals(result.gender(), person.getGender());
 
-        assertTrue(result.toString().contains("link=</person/1>;rel=\"self\""));
+        assertTrue(result.toString().contains("link=</api/person/1>;rel=\"self\""));
 
     }
 
@@ -168,7 +170,7 @@ class PersonServiceTest {
         assertNotNull(person1.id());
         assertNotNull(person1.link());
 
-        assertTrue(person1.toString().contains("link=</person/1>;rel=\"self\""));
+        assertTrue(person1.toString().contains("link=</api/person/1>;rel=\"self\""));
         assertEquals("person1", person1.firstName());
         assertEquals("person1", person1.lastName());
         assertEquals("Rua xxx", person1.address());
@@ -181,7 +183,7 @@ class PersonServiceTest {
         assertNotNull(person2.id());
         assertNotNull(person2.link());
 
-        assertTrue(person2.toString().contains("link=</person/2>;rel=\"self\""));
+        assertTrue(person2.toString().contains("link=</api/person/2>;rel=\"self\""));
         assertEquals("person2", person2.firstName());
         assertEquals("person2", person2.lastName());
         assertEquals("Rua yyy", person2.address());

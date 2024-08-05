@@ -1,10 +1,10 @@
 package br.com.jotave_erref.RestWithSpringBoot.service;
 
 import br.com.jotave_erref.RestWithSpringBoot.Controller.PersonController;
-import br.com.jotave_erref.RestWithSpringBoot.domain.Person;
-import br.com.jotave_erref.RestWithSpringBoot.domain.dto.DetailPersonData;
-import br.com.jotave_erref.RestWithSpringBoot.domain.dto.PersonData;
-import br.com.jotave_erref.RestWithSpringBoot.domain.dto.UpdatePersonData;
+import br.com.jotave_erref.RestWithSpringBoot.domain.person.Person;
+import br.com.jotave_erref.RestWithSpringBoot.domain.person.DetailPersonData;
+import br.com.jotave_erref.RestWithSpringBoot.domain.person.PersonData;
+import br.com.jotave_erref.RestWithSpringBoot.domain.person.UpdatePersonData;
 import br.com.jotave_erref.RestWithSpringBoot.infra.exception.RequiredObjectIsNullException;
 import br.com.jotave_erref.RestWithSpringBoot.infra.exception.ResourceNotFoundException;
 import br.com.jotave_erref.RestWithSpringBoot.repository.PersonRepository;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;

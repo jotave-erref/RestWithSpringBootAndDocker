@@ -1,7 +1,5 @@
-package br.com.jotave_erref.RestWithSpringBoot.domain;
+package br.com.jotave_erref.RestWithSpringBoot.domain.person;
 
-import br.com.jotave_erref.RestWithSpringBoot.domain.dto.DetailPersonData;
-import br.com.jotave_erref.RestWithSpringBoot.domain.dto.UpdatePersonData;
 import jakarta.persistence.*;
 import org.springframework.hateoas.RepresentationModel;
 
