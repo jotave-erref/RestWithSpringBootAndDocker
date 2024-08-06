@@ -3,9 +3,8 @@ package br.com.jotave_erref.RestWithSpringBoot.Controller;
 import br.com.jotave_erref.RestWithSpringBoot.domain.book.CreateBookData;
 import br.com.jotave_erref.RestWithSpringBoot.domain.book.DetailBookData;
 import br.com.jotave_erref.RestWithSpringBoot.domain.person.DetailPersonData;
-import br.com.jotave_erref.RestWithSpringBoot.domain.person.PersonData;
-import br.com.jotave_erref.RestWithSpringBoot.domain.person.UpdatePersonData;
 import br.com.jotave_erref.RestWithSpringBoot.service.BookService;
+import br.com.jotave_erref.RestWithSpringBoot.util.MediaType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,7 +23,8 @@ public class BookController {
     @Autowired
     private BookService service;
 
-    @PostMapping
+    @PostMapping(produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML},
+            consumes = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML})
     @Transactional
     @Operation(description = "Adds a New Book", summary = "Adds a new book  by Passing in a Json Representation of the Book",
             tags = {"Books"},
@@ -42,7 +42,7 @@ public class BookController {
         return ResponseEntity.ok().body(book);
     }
 
-    @GetMapping()
+    @GetMapping(produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML})
     @Operation(description = "Finds all Books", summary = "Finds all Books",
             tags = {"Books"},
             responses = {
@@ -61,7 +61,7 @@ public class BookController {
         return ResponseEntity.ok().body(books);
     }
 
-    @GetMapping("{id}")
+    @GetMapping(value = "{id}", produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML})
     @Operation(description = "Finds a person", summary = "Finds a person",
             tags = {"Books"},
             responses = {
@@ -80,7 +80,8 @@ public class BookController {
         return ResponseEntity.ok().body(book);
     }
 
-    @PutMapping()
+    @PutMapping(produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML},
+            consumes = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML})
     @Operation(description = "Updates a Book", summary = "Updates a Book by Passing in a Json Representation of the Person",
             tags = {"Books"},
             responses = {

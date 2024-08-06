@@ -4,6 +4,7 @@ import br.com.jotave_erref.RestWithSpringBoot.domain.person.DetailPersonData;
 import br.com.jotave_erref.RestWithSpringBoot.domain.person.PersonData;
 import br.com.jotave_erref.RestWithSpringBoot.domain.person.UpdatePersonData;
 import br.com.jotave_erref.RestWithSpringBoot.service.PersonService;
+import br.com.jotave_erref.RestWithSpringBoot.util.MediaType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,7 +26,8 @@ public class PersonController {
     private PersonService service;
 
 
-    @PostMapping
+    @PostMapping(produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML},
+            consumes = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML})
     @Transactional
     @Operation(description = "Adds a New Person", summary = "Adds a new person  by Passing in a Json Representation of the Person",
             tags = {"People"},
@@ -43,7 +45,7 @@ public class PersonController {
         return ResponseEntity.ok().body(person);
     }
 
-    @GetMapping()
+    @GetMapping(produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML})
     @Operation(description = "Finds all people", summary = "Finds all people",
             tags = {"People"},
             responses = {
@@ -62,7 +64,7 @@ public class PersonController {
         return ResponseEntity.ok().body(person);
     }
 
-    @GetMapping("{id}")
+    @GetMapping(value = "{id}", produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML})
     @Operation(description = "Finds a person", summary = "Finds a person",
             tags = {"People"},
             responses = {
@@ -81,7 +83,8 @@ public class PersonController {
         return ResponseEntity.ok().body(person);
     }
 
-    @PutMapping()
+    @PutMapping(produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML},
+    consumes = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML})
     @Operation(description = "Updates a Person", summary = "Updates a Person by Passing in a Json Representation of the Person",
             tags = {"People"},
             responses = {
@@ -99,7 +102,7 @@ public class PersonController {
         return ResponseEntity.ok().body(person);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping(value = "{id}")
     @Transactional
     @Operation(description = "Deletes a Person", summary = "Deletes a Person by Passing in a Json Representation of the Person",
             tags = {"People"},
