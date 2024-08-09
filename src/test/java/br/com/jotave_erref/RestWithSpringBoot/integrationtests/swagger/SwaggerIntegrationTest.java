@@ -1,7 +1,7 @@
-package br.com.jotave_erref.RestWithSpringBoot;
+package br.com.jotave_erref.RestWithSpringBoot.integrationtests.swagger;
 
 import br.com.jotave_erref.RestWithSpringBoot.configs.TestsConfigs;
-import br.com.jotave_erref.RestWithSpringBoot.integrationTests.testcontainers.AbstractIntegrationsTests;
+import br.com.jotave_erref.RestWithSpringBoot.integrationtests.testcontainers.AbstractIntegrationsTests;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

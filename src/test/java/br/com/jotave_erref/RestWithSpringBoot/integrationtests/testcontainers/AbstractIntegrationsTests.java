@@ -1,4 +1,4 @@
-package br.com.jotave_erref.RestWithSpringBoot.integrationTests.testcontainers;
+package br.com.jotave_erref.RestWithSpringBoot.integrationtests.testcontainers;
 
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
