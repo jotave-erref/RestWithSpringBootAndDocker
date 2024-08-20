@@ -19,9 +19,8 @@ import java.io.IOException;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = {"server.port=8888"})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ActiveProfiles("test")
 class PersonControllerJsonTest extends AbstractIntegrationsTests {
 
 	private static RequestSpecification specification;
@@ -32,7 +31,7 @@ class PersonControllerJsonTest extends AbstractIntegrationsTests {
 	@BeforeAll
 	public static void setUp(){
 		mapper = new ObjectMapper();
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES); //Disable failures when they are unknown. In this scenario it will ignore HATEOAS Links
+		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES); //how JSON deserialization will work. Disable failures when they are unknown. In this scenario it will ignore HATEOAS Links
 
 		person = new PersonDataTest();
 	}
@@ -64,6 +63,7 @@ class PersonControllerJsonTest extends AbstractIntegrationsTests {
 						.asString();
 		PersonDataTest createdPerson = mapper.readValue(content, PersonDataTest.class);
 		person = createdPerson;
+		System.out.println("persisted: " + createdPerson);
 
 
 		assertNotNull(createdPerson);
@@ -137,11 +137,8 @@ class PersonControllerJsonTest extends AbstractIntegrationsTests {
 						.body()
 						.asString();
 
-		System.out.println("person: " + person);
 		PersonDataTest persistedPerson = mapper.readValue(content, PersonDataTest.class);
 		person = persistedPerson;
-		System.out.println("persisted: " + persistedPerson);
-
 
 		assertNotNull(persistedPerson);
 		assertNotNull(persistedPerson.getFirstName());
@@ -156,50 +153,40 @@ class PersonControllerJsonTest extends AbstractIntegrationsTests {
 
 	}
 
-//	@Test
-//	@Order(4)
-//	void testCreate() throws IOException {
-//		mockPerson();
-//
-//		specification = new RequestSpecBuilder()
-//				.addHeader(TestsConfigs.HEADER_PARAM_ORIGIN, "http://localhost:8080")
-//				.setBasePath("/api/person")
-//				.setPort(TestsConfigs.SERVER_PORT)
-//				.addFilter(new RequestLoggingFilter(LogDetail.ALL))
-//				.addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-//				.build();
-//
-//
-//		var content =
-//				given().spec(specification)
-//						.contentType(TestsConfigs.CONTENT_TYPE_JSON)
-//						.body(person)
-//						.when()
-//						.post()
-//						.then()
-//						.statusCode(200)
-//						.extract()
-//						.body()
-//						.asString();
-//		PersonDataTest createdPerson = mapper.readValue(content, PersonDataTest.class);
-//		person = createdPerson;
-//
-//
-//		assertNotNull(createdPerson);
-//		assertNotNull(createdPerson.getFirstName());
-//		assertNotNull(createdPerson.getLastName());
-//		assertNotNull(createdPerson.getAddress());
-//		assertNotNull(createdPerson.getGender());
-//
-//		assertEquals("Jean", createdPerson.getFirstName());
-//		assertEquals("Victor", createdPerson.getLastName());
-//		assertEquals("Rua xxx", createdPerson.getAddress());
-//		assertEquals("Male", createdPerson.getGender());
-//
-//	}
+	@Test
+	@Order(4)
+	void testFindByIdWithWrongOrigin() throws IOException {
+		mockPerson();
+
+		specification = new RequestSpecBuilder()
+				.addHeader(TestsConfigs.HEADER_PARAM_ORIGIN, TestsConfigs.WRONG_ORIGIN_5000)
+				.setBasePath("/api/person")
+				.setPort(TestsConfigs.SERVER_PORT)
+				.addFilter(new RequestLoggingFilter(LogDetail.ALL))
+				.addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+				.build();
+
+
+		var content =
+				given().spec(specification)
+						.contentType(TestsConfigs.CONTENT_TYPE_JSON)
+						.pathParam("id", person.getId())
+						.when()
+						.get("{id}")
+						.then()
+						.statusCode(403)
+						.extract()
+						.body()
+						.asString();
+
+		assertNotNull(content);
+
+		assertEquals("Invalid CORS request", content);
+
+	}
 
 	private void mockPerson() {
-		person.setId(1L);
+		person.setId(2L);
 		person.setFirstName("Jean");
 		person.setLastName("Victor");
 		person.setAddress("Rua xxx");

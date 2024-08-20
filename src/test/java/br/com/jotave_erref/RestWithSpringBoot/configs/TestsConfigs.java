@@ -2,7 +2,7 @@ package br.com.jotave_erref.RestWithSpringBoot.configs;
 
 public class TestsConfigs {
 
-    public static final int SERVER_PORT = 8080;
+    public static final int SERVER_PORT = 8888;
     public static final String HEADER_PARAM_AUTHORIZATION = "Auhtorization";
     public static final String HEADER_PARAM_ORIGIN = "Origin";
 

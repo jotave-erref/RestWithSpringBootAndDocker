@@ -8,11 +8,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = {"server.port=8888"})
 class SwaggerIntegrationTest extends AbstractIntegrationsTests {
 
 	@Test
-	void shouldDisplaySwaggerUiPage() {
+	public void shouldDisplaySwaggerUiPage() {
 
 		var content =
 				given()
@@ -20,6 +20,9 @@ class SwaggerIntegrationTest extends AbstractIntegrationsTests {
 						.port(TestsConfigs.SERVER_PORT)
 						.when()
 						.get()
+						.then()
+						.statusCode(200)
+						.extract()
 						.body()
 						.asString();
 		assertTrue(content.contains("Swagger UI"));
