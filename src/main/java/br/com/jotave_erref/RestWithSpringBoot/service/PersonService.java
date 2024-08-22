@@ -1,6 +1,6 @@
 package br.com.jotave_erref.RestWithSpringBoot.service;
 
-import br.com.jotave_erref.RestWithSpringBoot.Controller.PersonController;
+import br.com.jotave_erref.RestWithSpringBoot.controller.PersonController;
 import br.com.jotave_erref.RestWithSpringBoot.domain.person.Person;
 import br.com.jotave_erref.RestWithSpringBoot.domain.person.DetailPersonData;
 import br.com.jotave_erref.RestWithSpringBoot.domain.person.PersonData;

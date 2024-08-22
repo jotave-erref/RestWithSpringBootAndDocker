@@ -1,10 +1,9 @@
 package br.com.jotave_erref.RestWithSpringBoot.service;
 
-import br.com.jotave_erref.RestWithSpringBoot.Controller.BookController;
+import br.com.jotave_erref.RestWithSpringBoot.controller.BookController;
 import br.com.jotave_erref.RestWithSpringBoot.domain.book.Book;
 import br.com.jotave_erref.RestWithSpringBoot.domain.book.CreateBookData;
 import br.com.jotave_erref.RestWithSpringBoot.domain.book.DetailBookData;
-import br.com.jotave_erref.RestWithSpringBoot.domain.person.Person;
 import br.com.jotave_erref.RestWithSpringBoot.infra.exception.RequiredObjectIsNullException;
 import br.com.jotave_erref.RestWithSpringBoot.repository.BookRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,12 +14,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.Links;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
 import java.sql.Date;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

@@ -1,6 +1,6 @@
 package br.com.jotave_erref.RestWithSpringBoot.service;
 
-import br.com.jotave_erref.RestWithSpringBoot.Controller.BookController;
+import br.com.jotave_erref.RestWithSpringBoot.controller.BookController;
 import br.com.jotave_erref.RestWithSpringBoot.domain.book.Book;
 import br.com.jotave_erref.RestWithSpringBoot.domain.book.CreateBookData;
 import br.com.jotave_erref.RestWithSpringBoot.domain.book.DetailBookData;
