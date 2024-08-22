@@ -1,5 +1,6 @@
 package br.com.jotave_erref.RestWithSpringBoot.infra;
 
+import br.com.jotave_erref.RestWithSpringBoot.infra.exception.InvalidJwtAuthenticationException;
 import br.com.jotave_erref.RestWithSpringBoot.infra.exception.RequiredObjectIsNullException;
 import br.com.jotave_erref.RestWithSpringBoot.infra.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,11 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
     private ResponseEntity<ExceptionResponse> handleBadRequestException(Exception ex, WebRequest request){
         var exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(InvalidJwtAuthenticationException.class)
+    private ResponseEntity<ExceptionResponse> handlerInvalidJwtAuthenticationException(Exception ex, WebRequest request){
+        var exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
     }
 
     private record ExceptionResponse(Date date, String message, String description) {
