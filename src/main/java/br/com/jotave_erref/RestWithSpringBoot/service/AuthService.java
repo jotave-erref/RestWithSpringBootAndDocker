@@ -57,4 +57,14 @@ public class AuthService {
         }
         return ResponseEntity.ok(tokenResponse);
     }
+
+    public boolean verifyDataIsNotNull(UserData data){
+            return data.username() == null || data.username().isBlank()
+                    || data.password() == null || data.password().isBlank();
+    }
+
+    public boolean verifyrRefreshDataIsNotNull(String username, String refreshToken){
+        return username == null || username.isBlank()
+                || refreshToken == null || refreshToken.isBlank();
+    }
 }
