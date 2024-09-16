@@ -1,4 +1,4 @@
-package br.com.jotave_erref.RestWithSpringBoot.integrationtests;
+package br.com.jotave_erref.RestWithSpringBoot.integrationtests.data;
 
 import java.util.Objects;
 
