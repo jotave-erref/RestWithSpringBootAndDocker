@@ -2,7 +2,7 @@ package br.com.jotave_erref.RestWithSpringBoot.integrationtests.controller.cors.
 
 import br.com.jotave_erref.RestWithSpringBoot.configs.TestsConfigs;
 import br.com.jotave_erref.RestWithSpringBoot.integrationtests.data.PersonDataTest;
-import br.com.jotave_erref.RestWithSpringBoot.integrationtests.data.TokenData;
+import br.com.jotave_erref.RestWithSpringBoot.integrationtests.data.TokenDataTest;
 import br.com.jotave_erref.RestWithSpringBoot.integrationtests.data.UserData;
 import br.com.jotave_erref.RestWithSpringBoot.integrationtests.testcontainers.AbstractIntegrationsTests;
 import io.restassured.builder.RequestSpecBuilder;
@@ -55,7 +55,7 @@ class PersonControllerCorsJsonTest extends AbstractIntegrationsTests {
 						.statusCode(200)
 						.extract()
 						.body()
-						.as(TokenData.class)
+						.as(TokenDataTest.class)
 						.getAccessToken();
 
 		specification = new RequestSpecBuilder()

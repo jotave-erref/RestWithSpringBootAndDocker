@@ -3,8 +3,8 @@ package br.com.jotave_erref.RestWithSpringBoot.integrationtests.data;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.util.Date;
-@XmlRootElement
-public class TokenData {
+@XmlRootElement(name = "TokenData")
+public class TokenDataTest {
 
     private String username;
     private Boolean authenticated;
@@ -13,10 +13,10 @@ public class TokenData {
     private String accessToken;
     private String refreshToken;
 
-    public TokenData() {
+    public TokenDataTest() {
     }
 
-    public TokenData(String username, Boolean authenticated, Date created, Date expiration, String accessToken, String refreshToken) {
+    public TokenDataTest(String username, Boolean authenticated, Date created, Date expiration, String accessToken, String refreshToken) {
         this.username = username;
         this.authenticated = authenticated;
         this.created = created;

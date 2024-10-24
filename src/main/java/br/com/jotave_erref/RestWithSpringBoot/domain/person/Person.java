@@ -7,8 +7,8 @@ import java.util.Objects;
 @Entity
 @Table(name = "person")
 public class Person extends RepresentationModel<Person> {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "first_name")
     private String firstName;
@@ -17,6 +17,8 @@ public class Person extends RepresentationModel<Person> {
     private String address;
     @Column
     private String gender;
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled;
 
     public Person(){}
 
@@ -25,13 +27,15 @@ public class Person extends RepresentationModel<Person> {
         this.lastName = data.lastName();
         this.address = data.address();
         this.gender = data.gender();
+        this.enabled = data.enabled();
     }
 
-    public Person(String firstName, String lastName, String address, String gender) {
+    public Person(String firstName, String lastName, String address, String gender, boolean enabled) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.gender = gender;
+        this.enabled = enabled;
     }
 
     public long getId() {
@@ -46,55 +50,20 @@ public class Person extends RepresentationModel<Person> {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(address, person.address) && Objects.equals(gender, person.gender);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(firstName, lastName, address, gender);
-    }
-
-    @Override
-    public String toString() {
-        return "Person{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", address='" + address + '\'' +
-                ", gender='" + gender + '\'' +
-                '}';
+    public boolean getEnabled() {
+        return enabled;
     }
 
     public void update(UpdatePersonData data) {
@@ -105,5 +74,31 @@ public class Person extends RepresentationModel<Person> {
         if(data.gender() != null){
             this.gender = data.gender();
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Person person = (Person) o;
+        return id == person.id && enabled == person.enabled && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(address, person.address) && Objects.equals(gender, person.gender);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), id, firstName, lastName, address, gender, enabled);
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", address='" + address + '\'' +
+                ", gender='" + gender + '\'' +
+                ", enabled=" + enabled +
+                '}';
     }
 }

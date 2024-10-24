@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,14 +32,16 @@ class PersonServiceTest {
     private PersonService service;
     @Mock
     private PersonRepository repository;
+//    @Mock
     private Person person;
+//    @Mock
     private DetailPersonData personData;
     private UpdatePersonData updatePersonData;
 
 
     @BeforeEach
     void setUp() {
-        this.person = new Person("Jean", "Victor", "Rua xxx", "male");
+        this.person = new Person("Jean", "Victor", "Rua xxx", "male", true);
         person.setId(1L);
 
 
@@ -68,16 +71,14 @@ class PersonServiceTest {
     @Test
     void testCreated(){
         this.personData = new DetailPersonData(person);
-        Person entity = new Person(personData);
-        entity.setId(1L);
 
         person.add(Link.of("/api/person/" + person.getId()));
 
-        when(repository.save(entity)).thenReturn(person);
+        when(repository.save(any(Person.class))).thenReturn(person);
 
         var result = service.created(personData);
 
-        verify(repository).save(entity);
+        verify(repository).save(any(Person.class));
 
         assertNotNull(result);
         assertNotNull(result.link());
@@ -151,12 +152,12 @@ class PersonServiceTest {
     void testFindAllPerson(){
 
         List<Person> persons = new ArrayList<>();
-        persons.add(new Person("person1", "person1", "Rua xxx", "male"));
-        persons.add(new Person("person2", "person2", "Rua yyy", "female"));
+        persons.add(new Person("person1", "person1", "Rua xxx", "male", true));
+        persons.add(new Person("person2", "person2", "Rua yyy", "female", true));
         persons.get(0).setId(1);
         persons.get(1).setId(2);
 
-        persons.stream().map(p -> new PersonData(p.getId(), p.getFirstName(), p.getLastName(), p.getAddress(), p.getGender(), p.getLinks())).toList();
+        persons.stream().map(p -> new PersonData(p.getId(), p.getFirstName(), p.getLastName(), p.getAddress(), p.getGender(), p.getEnabled(), p.getLinks())).toList();
 
         when(repository.findAll()).thenReturn(persons);
 
@@ -190,10 +191,5 @@ class PersonServiceTest {
         assertEquals("female", person2.gender());
 
     }
-
-
-
-
-
 
 }

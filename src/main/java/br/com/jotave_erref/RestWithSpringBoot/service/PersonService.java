@@ -8,6 +8,7 @@ import br.com.jotave_erref.RestWithSpringBoot.domain.person.UpdatePersonData;
 import br.com.jotave_erref.RestWithSpringBoot.infra.exception.RequiredObjectIsNullException;
 import br.com.jotave_erref.RestWithSpringBoot.infra.exception.ResourceNotFoundException;
 import br.com.jotave_erref.RestWithSpringBoot.repository.PersonRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +27,13 @@ public class PersonService {
     public DetailPersonData created(DetailPersonData data){
         if(data == null) throw new RequiredObjectIsNullException();
         Person person = new Person(data);
-        var enity = repository.save(person);
-        person.add(linkTo(methodOn(PersonController.class).search(enity.getId())).withSelfRel());
-        return new DetailPersonData(enity);
+        var entity = repository.save(person);
+        person.add(linkTo(methodOn(PersonController.class).search(entity.getId())).withSelfRel());
+        return new DetailPersonData(entity);
     }
 
     public DetailPersonData searchPerson(Long id) {
-        var person = repository.findById(id).get();
+        var person = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
 
         person.add(linkTo(methodOn(PersonController.class).search(person.getId())).withSelfRel());
         return new DetailPersonData(person);
@@ -44,7 +45,7 @@ public class PersonService {
         persons.stream().forEach(l -> l.add(linkTo(methodOn(PersonController.class).search(l.getId())).withSelfRel()));
 
         return persons.stream().map(p -> new PersonData(
-                p.getId(), p.getFirstName(), p.getLastName(), p.getAddress(), p.getGender(), p.getLinks()
+                p.getId(), p.getFirstName(), p.getLastName(), p.getAddress(), p.getGender(), p.getEnabled(), p.getLinks()
         )).toList();
     }
 
@@ -56,6 +57,15 @@ public class PersonService {
         var updatePerson = repository.save(person);
         updatePerson.add(linkTo(methodOn(PersonController.class).search(updatePerson.getId())).withSelfRel());
         return new DetailPersonData(updatePerson);
+    }
+
+    @Transactional
+    public PersonData disablePerson(Long id){
+        repository.disablePerson(id);
+        var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
+
+        entity.add(linkTo(methodOn(PersonController.class).search(entity.getId())).withSelfRel());
+        return new PersonData(entity);
     }
 
     public void deletePerson(Long id) {

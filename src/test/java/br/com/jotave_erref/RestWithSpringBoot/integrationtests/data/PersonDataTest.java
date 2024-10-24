@@ -1,13 +1,18 @@
 package br.com.jotave_erref.RestWithSpringBoot.integrationtests.data;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 import java.util.Objects;
 
+@XmlRootElement(name = "PersonDataTest")
 public class PersonDataTest{
     private Long id;
     private String firstName;
     private String lastName;
     private String address;
     private String gender;
+    private boolean enabled;
 
     public PersonDataTest(){}
 
@@ -52,17 +57,25 @@ public class PersonDataTest{
         this.gender = gender;
     }
 
+    public boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enable) {
+        this.enabled = enable;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PersonDataTest that = (PersonDataTest) o;
-        return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(address, that.address) && Objects.equals(gender, that.gender);
+        return enabled == that.enabled && Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(address, that.address) && Objects.equals(gender, that.gender);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, address, gender);
+        return Objects.hash(id, firstName, lastName, address, gender, enabled);
     }
 
     @Override
@@ -73,6 +86,7 @@ public class PersonDataTest{
                 ", lastName='" + lastName + '\'' +
                 ", address='" + address + '\'' +
                 ", gender='" + gender + '\'' +
+                ", enable=" + enabled +
                 '}';
     }
 }
