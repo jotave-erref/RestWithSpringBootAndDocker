@@ -10,9 +10,9 @@ import br.com.jotave_erref.RestWithSpringBoot.infra.exception.ResourceNotFoundEx
 import br.com.jotave_erref.RestWithSpringBoot.repository.PersonRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -39,14 +39,12 @@ public class PersonService {
         return new DetailPersonData(person);
     }
 
-    public List<PersonData> findAllPerson() {
-        var persons = repository.findAll();
+    public Page<PersonData> findAllPerson(Pageable pageable) {
+        var personPage = repository.findAll(pageable);
+        personPage.map(p -> p.add(linkTo(methodOn(PersonController.class).search(p.getId())).withSelfRel()));
+        var personData = personPage.map(PersonData::new);
 
-        persons.stream().forEach(l -> l.add(linkTo(methodOn(PersonController.class).search(l.getId())).withSelfRel()));
-
-        return persons.stream().map(p -> new PersonData(
-                p.getId(), p.getFirstName(), p.getLastName(), p.getAddress(), p.getGender(), p.getEnabled(), p.getLinks()
-        )).toList();
+        return personData;
     }
 
     public DetailPersonData updatePerson(UpdatePersonData data) {

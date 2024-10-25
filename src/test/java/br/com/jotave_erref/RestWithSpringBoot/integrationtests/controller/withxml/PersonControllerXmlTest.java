@@ -20,8 +20,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = {"server.port=8888"})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -110,7 +109,7 @@ class PersonControllerXmlTest extends AbstractIntegrationsTests {
 	@Order(2)
 	void testUpdate() throws IOException {
 		person.setAddress("Rua yyy");
-		person.setId(3l);
+		person.setId(2l);
 
 		var content =
 				given().spec(specification)
@@ -134,6 +133,8 @@ class PersonControllerXmlTest extends AbstractIntegrationsTests {
 		assertNotNull(createdPerson.getAddress());
 		assertNotNull(createdPerson.getGender());
 
+		assertTrue(createdPerson.getEnabled());
+
 		assertEquals(person.getFirstName(), createdPerson.getFirstName());
 
 		assertEquals("Zion", createdPerson.getFirstName());
@@ -145,9 +146,48 @@ class PersonControllerXmlTest extends AbstractIntegrationsTests {
 
 	@Test
 	@Order(3)
+	void testDisablePersonById() throws IOException {
+		person.setId(2L);
+
+		var content =
+				given().spec(specification)
+						.contentType(TestsConfigs.CONTENT_TYPE_XML)
+						.accept(TestsConfigs.CONTENT_TYPE_XML)
+						.header(TestsConfigs.HEADER_PARAM_ORIGIN, TestsConfigs.ORIGIN_8080)
+						.pathParam("id", person.getId())
+						.when()
+						.patch("{id}")
+						.then()
+						.statusCode(200)
+						.extract()
+						.body()
+						.asString();
+
+		PersonDataTest persistedPerson = mapper.readValue(content, PersonDataTest.class);
+		person = persistedPerson;
+
+		assertNotNull(persistedPerson);
+		assertNotNull(persistedPerson.getFirstName());
+		assertNotNull(persistedPerson.getLastName());
+		assertNotNull(persistedPerson.getAddress());
+		assertNotNull(persistedPerson.getGender());
+
+		assertFalse(persistedPerson.getEnabled());
+
+		assertFalse(persistedPerson.getEnabled());
+
+		assertEquals("Zion", persistedPerson.getFirstName());
+		assertEquals("Selassie", persistedPerson.getLastName());
+		assertEquals("Rua yyy", persistedPerson.getAddress());
+		assertEquals("Male", persistedPerson.getGender());
+
+	}
+
+	@Test
+	@Order(4)
 	void testFindById() throws IOException {
 		mockPerson();
-		person.setId(3l);
+		person.setId(2l);
 
 		var content =
 				given().spec(specification)
@@ -172,6 +212,8 @@ class PersonControllerXmlTest extends AbstractIntegrationsTests {
 		assertNotNull(persistedPerson.getAddress());
 		assertNotNull(persistedPerson.getGender());
 
+		assertFalse(persistedPerson.getEnabled());
+
 		assertEquals("Zion", persistedPerson.getFirstName());
 		assertEquals("Selassie", persistedPerson.getLastName());
 		assertEquals("Rua yyy", persistedPerson.getAddress());
@@ -180,7 +222,7 @@ class PersonControllerXmlTest extends AbstractIntegrationsTests {
 	}
 
 	@Test
-	@Order(4)
+	@Order(5)
 	void testDelete() throws IOException {
 		mockPerson();
 		person.setId(2l);
@@ -199,7 +241,7 @@ class PersonControllerXmlTest extends AbstractIntegrationsTests {
 	}
 
 	@Test
-	@Order(5)
+	@Order(6)
 	void testFindAll() throws IOException {
 
 		var content =
@@ -233,7 +275,7 @@ class PersonControllerXmlTest extends AbstractIntegrationsTests {
 	}
 
 	@Test
-	@Order(6)
+	@Order(7)
 	void testFindAllWithOutToken() throws IOException {
 
 		RequestSpecification specWithOutToken = new RequestSpecBuilder()
@@ -246,7 +288,7 @@ class PersonControllerXmlTest extends AbstractIntegrationsTests {
 		given().spec(specWithOutToken)
 						.contentType(TestsConfigs.CONTENT_TYPE_XML)
 						.accept(TestsConfigs.CONTENT_TYPE_XML)
-						.when()
+					 	.when()
 						.get()
 						.then()
 						.statusCode(403);
@@ -258,6 +300,7 @@ class PersonControllerXmlTest extends AbstractIntegrationsTests {
 		person.setLastName("Selassie");
 		person.setAddress("Rua xxx");
 		person.setGender("Male");
+		person.setEnabled(true);
 	}
 
 }

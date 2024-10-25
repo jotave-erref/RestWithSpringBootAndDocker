@@ -13,6 +13,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,8 +62,8 @@ public class PersonController {
             @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
             @ApiResponse(description = "Server Error", responseCode = "500", content = @Content)
         })
-    public ResponseEntity<List<PersonData>> findAll(){
-        var person = service.findAllPerson();
+    public ResponseEntity<Page<PersonData>> findAll(@PageableDefault(size = 10, page = 0, sort = {"id"}) Pageable pageable){
+        var person = service.findAllPerson(pageable);
         return ResponseEntity.ok().body(person);
     }
 
