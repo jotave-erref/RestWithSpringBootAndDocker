@@ -70,15 +70,15 @@ POST /api/auth/login
 **JSON**
 ```JSON
 {
-  "username": "usuario",
-  "password": "senha"
+  "username": "jean",
+  "password": "123456"
 }
 ```
 **XML**
 ```XML
    <body>
-      <username>usuario</username>
-      <password>senha</password>
+      <username>jean</username>
+      <password>123456</password>
    </body>
 
 ```
